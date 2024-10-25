@@ -8,7 +8,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Input } from "@/ui/elements/input";
 import { useBuilders } from "@/hooks/useBuilders";
 import { toast } from "sonner";
-import { formatTime } from "@/utils/time";
+import { formatTimeUntil } from "@/utils/time";
 import { useBuilder } from "@/hooks/useBuilder";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -111,7 +111,7 @@ export const DuelLobbyDialogContent = ({ game, setOpen }: { game: ComponentValue
                 <div className="flex gap-2">
                     <div>
                         <p>LENGTH</p>
-                        <Input className="text-center" value={formatTime(lengthDate)} disabled />
+                        <Input className="text-center" value={formatTimeUntil(lengthDate)} disabled />
                     </div>
                     <div>
                         <p>STAKE</p>
