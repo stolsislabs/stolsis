@@ -97,6 +97,8 @@ export const DuelLobbyDialogContent = ({ game, setOpen }: { game: ComponentValue
         [account?.address, builders]
     )
 
+    const lengthDate = new Date(Date.now() + Number(game.duration) * 1000);
+
     return (
         <>
             <AlertDialogContent>
@@ -109,7 +111,7 @@ export const DuelLobbyDialogContent = ({ game, setOpen }: { game: ComponentValue
                 <div className="flex gap-2">
                     <div>
                         <p>LENGTH</p>
-                        <Input className="text-center" value={formatTime(game.getEndDate())} disabled />
+                        <Input className="text-center" value={formatTime(lengthDate)} disabled />
                     </div>
                     <div>
                         <p>STAKE</p>
