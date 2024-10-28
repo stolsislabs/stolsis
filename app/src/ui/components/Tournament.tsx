@@ -297,7 +297,7 @@ export const GameRow = ({
         {isSelf && tournament && tournament.isClaimable(rank, mode) ? (
           <Claim tournament={tournament} rank={rank} mode={mode} />
         ) : (
-          <Spectate gameId={game.id} />
+          <Spectate gameId={game.id} over />
         )}
       </TableCell>
     </TableRow>
