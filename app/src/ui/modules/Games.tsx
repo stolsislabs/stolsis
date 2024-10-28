@@ -29,6 +29,7 @@ import { DuelJoinDialogContent } from "../components/dom/dialogs/duels/DuelJoinD
 import { formatTime, formatTimeUntil } from "@/utils/time";
 import { useBuilders } from "@/hooks/useBuilders";
 import { cn } from "../utils";
+import { Spectate } from "../components/Tournament";
 
 export type GamesList = { [key: number]: ComponentValue<Schema, Game>; }
 
@@ -115,7 +116,7 @@ const DuelLobbyRow = ({ game }: { game: ComponentValue<Schema, Game> }) => {
       <TableCell> {/* Buy-in */}
         <p className="text-center">{`${Number(game.price) / 1e18 || "0"}`}</p>
       </TableCell>
-      <TableCell> {/* Button */}
+      <TableCell className="flex justify-center items-center"> {/* Button */}
         <DuelLobbyRowButton game={game} />
       </TableCell>
     </TableRow>
@@ -191,6 +192,12 @@ const DuelLobbyRowButton = ({ game }: { game: ComponentValue<Schema, Game> }) =>
     )
   }
 
+  if (isOngoing && !isParticipating) {
+    return (
+      <Spectate gameId={game.id} />
+    )
+  }
+
   if (isFull && !isParticipating) {
     <p>Full</p>
   }
@@ -202,6 +209,10 @@ const DuelLobbyRowButton = ({ game }: { game: ComponentValue<Schema, Game> }) =>
       <Button className="py-2 w-36" disabled={true}>Claimed</Button>
     )
   }
+
+  return (
+    <Spectate gameId={game.id} over />
+  )
 }
 
 export const GameSingleRow = ({ game }: { game: ComponentValue<Schema, Game> }) => {
