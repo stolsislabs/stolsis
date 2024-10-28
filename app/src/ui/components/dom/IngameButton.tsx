@@ -45,7 +45,7 @@ export const IngameButton = React.forwardRef<
     ), [currentTutorialStage?.interactionText, props.id])
     const tutorialOpen = useMemo(() => props.id && game?.mode.value === ModeType.Tutorial && interactionText, [game?.mode.value, interactionText, props.id])
 
-    const [ephemeralOpen, setEphemeralOpen] = useState(
+    const [isTooltipOpenManually, setIsTooltipOpenManually] = useState(
       !!tutorialOpen && tutorialCondition,
     );
 
@@ -62,10 +62,10 @@ export const IngameButton = React.forwardRef<
       </Button>
     );
 
-    const memoizedOpen = useMemo(() => ephemeralOpen || (!!tutorialOpen && tutorialCondition), [ephemeralOpen, tutorialOpen, tutorialCondition])
+    const memoizedOpen = useMemo(() => isTooltipOpenManually || (!!tutorialOpen && tutorialCondition), [isTooltipOpenManually, tutorialOpen, tutorialCondition])
     const onOpenChangeCallback = useCallback((open: boolean) => {
       if (!tutorialOpen && !tutorialCondition) {
-        setEphemeralOpen(open);
+        setIsTooltipOpenManually(open);
       }
     }, [tutorialOpen, tutorialCondition])
 
