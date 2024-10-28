@@ -31,6 +31,8 @@ import {
 import fullscreenOn from "/assets/icons/fullscreen-on.svg";
 import fullscreenOff from "/assets/icons/fullscreen-off.svg";
 import { useFullscreen } from "@/hooks/useFullscreen";
+import { cn } from "@/ui/utils";
+import { ModeType } from "@/dojo/game/types/mode";
 
 type MenuItem = {
     name: string
@@ -114,7 +116,7 @@ export const NavigationMenu = ({ setHasOpenMenu }: { setHasOpenMenu: React.Dispa
                     id="deck-composition"
                     icon={infoIcon}
                     onClick={() => { setCompositionOpen(true); setHasOpenMenu(true) }}
-                    className="pointer-events-auto"
+                    className={cn("pointer-events-auto", game?.mode.value === ModeType.Duel && "collapse")}
                 />
                 <TutorialDialog />
             </div>
