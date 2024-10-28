@@ -16,10 +16,10 @@ export const CharTextures = ({
   const { characters } = useCharacters({ gameId });
 
   const renderedItems = useMemo(() => {
-    return characters.map((character, index) => {
+    return characters.map((character) => {
       return (
         <CharTexture
-          key={index}
+          key={`${character.index}-${character.player_id}`}
           character={character}
           radius={radius}
           height={height}

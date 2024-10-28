@@ -22,16 +22,11 @@ import { useGame } from "@/hooks/useGame";
 import icon from "/assets/icons/surrender.svg";
 import { useActions } from "@/hooks/useActions";
 
-interface TProps { }
-
-export const Surrender = (props: TProps) => {
+export const Surrender = () => {
   const { gameId } = useQueryParams();
   // const { account } = useAccount();
   const {
     account: { account },
-    setup: {
-      systemCalls: { surrender },
-    },
   } = useDojo();
 
   const { game } = useGame({ gameId });

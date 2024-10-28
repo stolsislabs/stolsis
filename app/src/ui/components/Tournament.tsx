@@ -41,7 +41,7 @@ import { Game } from "@/dojo/game/models/game";
 import { usePlayer } from "@/hooks/usePlayer";
 import { useBuilders } from "@/hooks/useBuilders";
 import calendarIcon from "/assets/icons/calendar.svg";
-import { faSackDollar } from "@fortawesome/free-solid-svg-icons";
+import { faSackDollar, faEye } from "@fortawesome/free-solid-svg-icons";
 import { Sponsor } from "./Sponsor";
 
 export const getSeason = (mode: Mode) => {
@@ -288,7 +288,7 @@ export const GameRow = ({
       <TableCell className="text-left">
         {player?.getShortName()}
       </TableCell>
-      <TableCell className="text-right">{game.score}</TableCell>
+      <TableCell className="text-right">{builders.reduce((sum, builder) => sum + (builder.score || 0), 0)}</TableCell>
       <TableCell className="text-right">{duration}</TableCell>
       <TableCell className="text-right">
         {game.tile_count}
@@ -297,14 +297,14 @@ export const GameRow = ({
         {isSelf && tournament && tournament.isClaimable(rank, mode) ? (
           <Claim tournament={tournament} rank={rank} mode={mode} />
         ) : (
-          <Spectate gameId={game.id} />
+          <Spectate gameId={game.id} over />
         )}
       </TableCell>
     </TableRow>
   );
 };
 
-export const Spectate = ({ gameId }: { gameId: number }) => {
+export const Spectate = ({ gameId, over = false }: { gameId: number, over?: boolean }) => {
   const navigate = useNavigate();
 
   const setGameQueryParam = useMemo(() => {
@@ -318,12 +318,16 @@ export const Spectate = ({ gameId }: { gameId: number }) => {
     <Button
       size={"sm"}
       className={
-        "px-2 sm:px-1 lg:px-2 flex gap-3 self-end h-8 w-19 hover:bg-transparent border-none"
+        "px-3 sm:px-2 lg:px-2 flex items-center justify-center self-end size-9 hover:bg-transparent border-none"
       }
       variant={"ghost"}
       onClick={() => gameId && setGameQueryParam(gameId.toString())}
     >
-      <img className="w-6" src={viewmapIcon} />
+      {over ? (
+        <img className="size-6" src={viewmapIcon} />
+      ) : (
+        <FontAwesomeIcon icon={faEye} size="lg" className="w-6 h-6" />
+      )}
     </Button>
   );
 };

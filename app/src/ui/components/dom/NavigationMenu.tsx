@@ -31,6 +31,9 @@ import {
 import fullscreenOn from "/assets/icons/fullscreen-on.svg";
 import fullscreenOff from "/assets/icons/fullscreen-off.svg";
 import { useFullscreen } from "@/hooks/useFullscreen";
+import { cn } from "@/ui/utils";
+import { ModeType } from "@/dojo/game/types/mode";
+import { useTutorial } from "@/hooks/useTutorial";
 
 type MenuItem = {
     name: string
@@ -40,7 +43,7 @@ type MenuItem = {
 }
 
 // TODO: Simplify this component - too big
-export const NavigationMenu = ({ setHasOpenMenu }: { setHasOpenMenu: React.Dispatch<React.SetStateAction<boolean>> }) => {
+export const NavigationMenu = ({ setHasOpenMenu, hasOpenMenu }: { setHasOpenMenu: React.Dispatch<React.SetStateAction<boolean>>, hasOpenMenu: boolean }) => {
     const { gameId } = useQueryParams();
     const { game } = useGame({ gameId });
     const items = useMemo(() => game?.getPlans() || [], [game]);
@@ -48,6 +51,7 @@ export const NavigationMenu = ({ setHasOpenMenu }: { setHasOpenMenu: React.Dispa
     const strategyMode = useGameStore((state) => state.strategyMode);
     const setStrategyMode = useGameStore((state) => state.setStrategyMode);
     const toggleStrategyMode = () => setStrategyMode(!strategyMode)
+    const { currentTutorialStage } = useTutorial();
 
     const navigate = useNavigate();
     const { setMuted, muted } = useMusicPlayer();
@@ -56,6 +60,8 @@ export const NavigationMenu = ({ setHasOpenMenu }: { setHasOpenMenu: React.Dispa
     const toggleMusic = () => setMuted(!muted)
 
     const fullscreen = useFullscreen();
+
+    const shouldDisplayBurgerMenuTutorialTooltip = useMemo(() => currentTutorialStage && !hasOpenMenu, [currentTutorialStage, hasOpenMenu])
 
     const NavigationMenuItems: Array<MenuItem> = [
         {
@@ -114,7 +120,7 @@ export const NavigationMenu = ({ setHasOpenMenu }: { setHasOpenMenu: React.Dispa
                     id="deck-composition"
                     icon={infoIcon}
                     onClick={() => { setCompositionOpen(true); setHasOpenMenu(true) }}
-                    className="pointer-events-auto"
+                    className={cn("pointer-events-auto", game?.mode.value === ModeType.Duel && "collapse")}
                 />
                 <TutorialDialog />
             </div>
@@ -123,7 +129,7 @@ export const NavigationMenu = ({ setHasOpenMenu }: { setHasOpenMenu: React.Dispa
                 onOpenChange={setHasOpenMenu}
             >
                 <CollapsibleTrigger asChild className="mb-1 right-4 absolute sm:relative sm:left-0">
-                    <IngameButton id="burger-menu" icon={burgerMenuIcon} />
+                    <IngameButton id="burger-menu" name=" " side="right" icon={burgerMenuIcon} tutorialCondition={shouldDisplayBurgerMenuTutorialTooltip} />
                 </CollapsibleTrigger>
                 <CollapsibleContent className="flex flex-row sm:flex-col gap-1 absolute sm:relative top-4 sm:top-auto">
                     {NavigationMenuItems.map(({ name, icon, onClick, children }) => (
