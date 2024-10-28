@@ -282,7 +282,7 @@ const TileHighlightTooltip = () => {
     ) + 1;
 
   const shouldDisplayTutorialTooltip = useMemo(() => {
-    if (!currentTutorialStage) return false;
+    if (!currentTutorialStage || !currentTutorialStage?.interactionText.has('tile-ingame')) return false;
 
     const {
       presetTransaction: { x: presetX, y: presetY },

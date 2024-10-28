@@ -28,7 +28,7 @@ const GameScreen = () => {
         <Overlay.Header />
         <Overlay.Banner />
         <Overlay.Content>
-          <NavigationMenu setHasOpenMenu={setHasOpenMenu} />
+          <NavigationMenu setHasOpenMenu={setHasOpenMenu} hasOpenMenu={hasOpenMenu} />
           <IngameStatus hasOpenMenu={hasOpenMenu} />
           <CharacterMenu />
           <HandPanel />

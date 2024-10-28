@@ -206,12 +206,30 @@ export const TUTORIAL_STAGES = [
     new THREE.Vector2(0.85, 0),
   ),
   new TutorialStage(
+    { x: 0, y: 0 },
+    {
+      orientation: -1,
+      role: -1,
+      spot: -1,
+      tile_id: -1,
+      x: -1,
+      y: -1,
+    },
+    new Map([
+      ["burger-menu", "Click to open the menu"],
+      ["burn-tile", "Click to burn the current tile"],
+    ]),
+    "",
+    1,
+    new THREE.Vector2(0.85, 0),
+  ),
+  new TutorialStage(
     { x: 3, y: 0 },
     {
       orientation: 4,
       role: 0,
       spot: 0,
-      tile_id: 9,
+      tile_id: 10,
       x: 2147483648,
       y: 2147483647,
     },

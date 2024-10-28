@@ -14,6 +14,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../elements/dialog";
+import { IngameButton } from "../components/dom/IngameButton";
+import { useTutorial } from "@/hooks/useTutorial";
+import { useMemo } from "react";
 
 export const Discard = () => {
   const { gameId } = useQueryParams();
@@ -23,20 +26,26 @@ export const Discard = () => {
   } = useDojo();
 
   const { game } = useGame({ gameId });
+  const { currentTutorialStage } = useTutorial();
 
   const { handleDiscard, builder } = useActions();
+
+  const shouldDisplayTutorialTooltip = useMemo(() => !!currentTutorialStage, [currentTutorialStage]);
 
   if (!account || !game || !builder) return <></>;
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
+        <IngameButton
+          id="burn-tile"
+          name="Burn Tile"
           disabled={!enabled}
-          className={`px-2 aspect-square size-10 xl:size-16 p-2 bg-[#D2E2F1] border-none bg-opacity-80 rounded-md pointer-events-auto flex items-center justify-center`}
-        >
-          <img src={icon} className="w-full h-full object-contain" />
-        </Button>
+          side="right"
+          tutorialCondition={shouldDisplayTutorialTooltip}
+          className={`px-2 aspect-square size-10 xl:size-16 p-2 bg-[#D2E2F1] bg-opacity-80 rounded-md pointer-events-auto flex items-center justify-center`}
+          icon={icon}        >
+        </IngameButton>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
