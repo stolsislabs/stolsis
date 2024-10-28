@@ -9,7 +9,7 @@ export const useCharacters = ({
 }: {
   gameId: number;
 }): { characters: Character[] } => {
-  const [characters, setCharacters] = useState<any>({});
+  const [characters, setCharacters] = useState<Character[]>([]);
 
   const {
     setup: {
@@ -35,18 +35,17 @@ export const useCharacters = ({
       return new CharacterClass(component);
     });
 
-    const objectified = components.reduce(
-      (obj: any, character: Character | undefined) => {
-        if (character) {
-          obj[character.index] = character;
-        }
-        return obj;
-      },
-      {},
-    );
+    const validComponents = components.filter((c): c is Character => c !== undefined);
 
-    setCharacters(objectified);
+    const sortedCharacters = validComponents.sort((a, b) => {
+      if (a.index !== b.index) {
+        return a.index - b.index;
+      }
+      return Number(a.player_id) - Number(b.player_id);
+    });
+
+    setCharacters(sortedCharacters);
   }, [characterKeys]);
 
-  return { characters: Object.values(characters) };
+  return { characters };
 };
