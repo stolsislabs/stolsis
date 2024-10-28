@@ -318,13 +318,13 @@ export const Spectate = ({ gameId, over = false }: { gameId: number, over?: bool
     <Button
       size={"sm"}
       className={
-        "px-3 sm:px-2 lg:px-3 flex items-center justify-center self-end h-10 w-10 hover:bg-transparent border-none"
+        "px-3 sm:px-2 lg:px-2 flex items-center justify-center self-end size-9 hover:bg-transparent border-none"
       }
       variant={"ghost"}
       onClick={() => gameId && setGameQueryParam(gameId.toString())}
     >
       {over ? (
-        <img className="w-6 h-6" src={viewmapIcon} />
+        <img className="size-6" src={viewmapIcon} />
       ) : (
         <FontAwesomeIcon icon={faEye} size="lg" className="w-6 h-6" />
       )}
