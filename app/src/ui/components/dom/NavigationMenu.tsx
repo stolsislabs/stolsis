@@ -84,7 +84,7 @@ export const NavigationMenu = ({ setHasOpenMenu, hasOpenMenu }: { setHasOpenMenu
             name: "Help Guide",
             icon: helpGuideIcon,
             onClick: () => {
-                console.log("Help Guide");
+                window.open('https://docs.paved.gg/', '_blank');
             },
         },
         {
