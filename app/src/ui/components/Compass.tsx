@@ -1,8 +1,8 @@
 import { useCameraStore } from "../../store";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import icon from "/assets/icons/compass.svg";
-import { Button } from "../elements/button";
+import { IngameButton } from "./dom/IngameButton";
 
 // TODO: Remove redundant component (move correct functionality to camera instead, custom hook called from NavigationMenu instead etc.)
 export const Compass = () => {
@@ -22,18 +22,14 @@ export const Compass = () => {
     setRotation(deg);
   }, [compassRotation]);
 
-  const style = useMemo(() => {
-    return {
-      transform: `rotate(${rotation}deg)`,
-    };
-  }, [rotation]);
-
   return (
-    <Button
-      className={`px-2 aspect-square size-10 xl:size-16 p-2 bg-[#D2E2F1] border-none bg-opacity-80 rounded-md pointer-events-auto flex items-center justify-center`}
+    <IngameButton
+      icon={{
+        path: icon,
+        style: { transform: `rotate(${rotation}deg)` }
+      }}
+      name="Rotate View"
       onClick={() => setRotate(true)}
-    >
-      <img src={icon} className="w-full h-full object-contain" style={style} />
-    </Button>
+    />
   );
 };

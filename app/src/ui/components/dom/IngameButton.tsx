@@ -13,7 +13,10 @@ import React, { ReactElement, useCallback, useMemo, useState } from "react";
 
 type IngameButtonProps = ButtonProps &
   React.RefAttributes<HTMLButtonElement> & {
-    icon: string;
+    icon: string | {
+      path: string;
+      style?: React.CSSProperties;
+    };
     name?: string;
     side?: "left" | "right" | "top" | "bottom";
     tutorialCondition?: boolean;
@@ -58,7 +61,11 @@ export const IngameButton = React.forwardRef<
         )}
         {...props}
       >
-        <img src={icon} className="w-full h-full object-contain" />
+        <img
+          src={typeof icon === 'string' ? icon : icon.path}
+          className="w-full h-full object-contain"
+          style={typeof icon === 'string' ? undefined : icon.style}
+        />
       </Button>
     );
 

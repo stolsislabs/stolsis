@@ -47,7 +47,7 @@ export const IngameStatus = ({ hasOpenMenu }: { hasOpenMenu: boolean }) => {
         />
         <StatusSlot
           iconData={{ def: faFire, style: "text-orange-500 mx-2" }}
-          data={builder.discarded}
+          data={builder.discarded / 2}
         />
       </div>
     )
