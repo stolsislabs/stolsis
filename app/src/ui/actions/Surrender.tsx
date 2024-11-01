@@ -12,7 +12,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/ui/elements/tooltip";
 import { Button } from "@/ui/elements/button";
@@ -23,16 +22,11 @@ import { useGame } from "@/hooks/useGame";
 import icon from "/assets/icons/surrender.svg";
 import { useActions } from "@/hooks/useActions";
 
-interface TProps {}
-
-export const Surrender = (props: TProps) => {
+export const Surrender = () => {
   const { gameId } = useQueryParams();
   // const { account } = useAccount();
   const {
     account: { account },
-    setup: {
-      systemCalls: { surrender },
-    },
   } = useDojo();
 
   const { game } = useGame({ gameId });
@@ -46,20 +40,18 @@ export const Surrender = (props: TProps) => {
 
   return (
     <AlertDialog>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger>
-            <AlertDialogTrigger asChild>
-              <Button disabled={disabled} variant={"command"} size={"command"}>
-                <img src={icon} className="h-8 sm:h-4 md:h-8 fill-current" />
-              </Button>
-            </AlertDialogTrigger>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p className="select-none">Surrender</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <AlertDialogTrigger asChild>
+            <Button disabled={disabled} variant={"command"} size={"command"}>
+              <img src={icon} className="h-8 sm:h-4 md:h-8 fill-current" />
+            </Button>
+          </AlertDialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="select-none">Surrender</p>
+        </TooltipContent>
+      </Tooltip>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Surrender?</AlertDialogTitle>

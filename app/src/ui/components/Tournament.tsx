@@ -15,7 +15,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/ui/elements/tooltip";
 import {
@@ -42,7 +41,8 @@ import { Game } from "@/dojo/game/models/game";
 import { usePlayer } from "@/hooks/usePlayer";
 import { useBuilders } from "@/hooks/useBuilders";
 import calendarIcon from "/assets/icons/calendar.svg";
-import { faSackDollar } from "@fortawesome/free-solid-svg-icons";
+import { faSackDollar, faEye } from "@fortawesome/free-solid-svg-icons";
+import { Sponsor } from "./Sponsor";
 
 export const getSeason = (mode: Mode) => {
   const now = Math.floor(Date.now() / 1000);
@@ -104,21 +104,19 @@ export const TournamentDialog = ({ mode }: { mode: Mode }) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button size={"default"}>
-                <img
-                  src={leaderboard}
-                  className="w-8 fill-secondary-foreground"
-                />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="select-none">Leaderboard</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size={"default"}>
+              <img
+                src={leaderboard}
+                className="w-8 fill-secondary-foreground"
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="select-none">Leaderboard</p>
+          </TooltipContent>
+        </Tooltip>
       </DialogTrigger>
       <DialogContent className="max-h-dscreen overflow-scroll">
         <DialogHeader className="flex items-center">
@@ -165,10 +163,9 @@ export const Tournament = ({ mode }: { mode: Mode }) => {
   }, [page, mode]);
 
   const allGames = useMemo(() => {
-    const offset = BigInt(mode.offset());
+    const offset = BigInt(mode?.offset() || 0);
     return games
       .filter((game) => game.tournament_id - offset === BigInt(page))
-      .sort((a, b) => b.score - a.score)
       .slice(0, 10);
   }, [games, page, mode]);
 
@@ -211,7 +208,7 @@ export const Tournament = ({ mode }: { mode: Mode }) => {
           <p>{endTime}</p>
         </div>
       </div>
-
+      <Sponsor tournamentId={getSeason(mode)} mode={mode} />
       <Table>
         <TableHeader>
           <TableRow className="text-3xs lg: lg:text-xs sm:[&>*]:h-1 lg:[&>*]:h-10 [&>*]:text-foreground tracking-widest">
@@ -287,27 +284,27 @@ export const GameRow = ({
     <TableRow
       className={`text-3xs lg:text-xs ${isSelf && "[&>*]:text-[#955142]"}`}
     >
-      <TableCell className="text-background">{playerRank}</TableCell>
-      <TableCell className="text-left text-background">
+      <TableCell>{playerRank}</TableCell>
+      <TableCell className="text-left">
         {player?.getShortName()}
       </TableCell>
-      <TableCell className="text-right text-background">{game.score}</TableCell>
-      <TableCell className="text-right text-background">{duration}</TableCell>
-      <TableCell className="text-right text-background">
+      <TableCell className="text-right">{builders.reduce((sum, builder) => sum + (builder.score || 0), 0)}</TableCell>
+      <TableCell className="text-right">{duration}</TableCell>
+      <TableCell className="text-right">
         {game.tile_count}
       </TableCell>
-      <TableCell className="text-right text-background">
+      <TableCell className="text-right">
         {isSelf && tournament && tournament.isClaimable(rank, mode) ? (
           <Claim tournament={tournament} rank={rank} mode={mode} />
         ) : (
-          <Spectate gameId={game.id} />
+          <Spectate gameId={game.id} over />
         )}
       </TableCell>
     </TableRow>
   );
 };
 
-export const Spectate = ({ gameId }: { gameId: number }) => {
+export const Spectate = ({ gameId, over = false }: { gameId: number, over?: boolean }) => {
   const navigate = useNavigate();
 
   const setGameQueryParam = useMemo(() => {
@@ -321,12 +318,16 @@ export const Spectate = ({ gameId }: { gameId: number }) => {
     <Button
       size={"sm"}
       className={
-        "px-2 sm:px-1 lg:px-2 flex gap-3 self-end h-8 w-19 hover:bg-transparent border-none"
+        "px-3 sm:px-2 lg:px-2 flex items-center justify-center self-end size-9 hover:bg-transparent border-none"
       }
       variant={"ghost"}
       onClick={() => gameId && setGameQueryParam(gameId.toString())}
     >
-      <img className="w-6" src={viewmapIcon} />
+      {over ? (
+        <img className="size-6" src={viewmapIcon} />
+      ) : (
+        <FontAwesomeIcon icon={faEye} size="lg" className="w-6 h-6" />
+      )}
     </Button>
   );
 };

@@ -6,15 +6,17 @@ import { Button, ButtonProps } from "@/ui/elements/button";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/ui/elements/tooltip";
 import { cn } from "@/ui/utils";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useCallback, useMemo, useState } from "react";
 
 type IngameButtonProps = ButtonProps &
   React.RefAttributes<HTMLButtonElement> & {
-    icon: string;
+    icon: string | {
+      path: string;
+      style?: React.CSSProperties;
+    };
     name?: string;
     side?: "left" | "right" | "top" | "bottom";
     tutorialCondition?: boolean;
@@ -41,13 +43,12 @@ export const IngameButton = React.forwardRef<
     const { game } = useGame({ gameId });
     const { currentTutorialStage } = useTutorial();
 
-    const interactionText = currentTutorialStage?.interactionText?.get(
+    const interactionText = useMemo(() => currentTutorialStage?.interactionText?.get(
       props.id ?? "",
-    );
-    const tutorialOpen =
-      props.id && game?.mode.value === ModeType.Tutorial && interactionText;
+    ), [currentTutorialStage?.interactionText, props.id])
+    const tutorialOpen = useMemo(() => props.id && game?.mode.value === ModeType.Tutorial && interactionText, [game?.mode.value, interactionText, props.id])
 
-    const [ephemeralOpen, setEphemeralOpen] = useState(
+    const [isTooltipOpenManually, setIsTooltipOpenManually] = useState(
       !!tutorialOpen && tutorialCondition,
     );
 
@@ -60,33 +61,38 @@ export const IngameButton = React.forwardRef<
         )}
         {...props}
       >
-        <img src={icon} className="w-full h-full object-contain" />
+        <img
+          src={typeof icon === 'string' ? icon : icon.path}
+          className="w-full h-full object-contain"
+          style={typeof icon === 'string' ? undefined : icon.style}
+        />
       </Button>
     );
 
+    const memoizedOpen = useMemo(() => isTooltipOpenManually || (!!tutorialOpen && tutorialCondition), [isTooltipOpenManually, tutorialOpen, tutorialCondition])
+    const onOpenChangeCallback = useCallback((open: boolean) => {
+      if (!tutorialOpen && !tutorialCondition) {
+        setIsTooltipOpenManually(open);
+      }
+    }, [tutorialOpen, tutorialCondition])
+
     return name ? (
-      <TooltipProvider>
-        <Tooltip
-          open={ephemeralOpen || (!!tutorialOpen && tutorialCondition)}
-          onOpenChange={(open) => {
-            if (!tutorialOpen && !tutorialCondition) {
-              setEphemeralOpen(open);
-            }
-          }}
+      <Tooltip
+        open={memoizedOpen}
+        onOpenChange={onOpenChangeCallback}
+      >
+        <TooltipTrigger asChild>{content}</TooltipTrigger>
+        <TooltipContent
+          className="sm:bg-transparent max-w-[200px] sm:max-w-full whitespace-normal text-center sm:text-start"
+          side={side}
         >
-          <TooltipTrigger asChild>{content}</TooltipTrigger>
-          <TooltipContent
-            className="sm:bg-transparent max-w-[200px] sm:max-w-full whitespace-normal text-center sm:text-start"
-            side={side}
-          >
-            <p>
-              {tutorialOpen && tutorialCondition
-                ? `${interactionText ?? name}`
-                : name}
-            </p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+          <p>
+            {tutorialOpen && tutorialCondition
+              ? `${interactionText ?? name}`
+              : name}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     ) : (
       content
     );

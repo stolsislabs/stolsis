@@ -12,10 +12,10 @@ import { NavigationMenu } from "../components/dom/NavigationMenu";
 import { CharacterMenu } from "../components/dom/CharacterMenu";
 import { HandPanel } from "../components/dom/HandPanel";
 import { useState } from "react";
-import { GameCompletedDialog } from "../components/dom/GameCompleteDialog";
+import { GameCompletedDialog } from "../components/dom/dialogs/GameCompleteDialog";
+import { OutdatedAlertDialog } from "../components/dom/dialogs/OutdatedAlertDialog";
 
 // TODO: Remove all TooltipProviders except for one in "main.tsx"
-
 const GameScreen = () => {
   const loading = useUIStore((state) => state.loading);
   const [hasOpenMenu, setHasOpenMenu] = useState<boolean>(false);
@@ -28,11 +28,12 @@ const GameScreen = () => {
         <Overlay.Header />
         <Overlay.Banner />
         <Overlay.Content>
-          <NavigationMenu setHasOpenMenu={setHasOpenMenu} />
+          <NavigationMenu setHasOpenMenu={setHasOpenMenu} hasOpenMenu={hasOpenMenu} />
           <IngameStatus hasOpenMenu={hasOpenMenu} />
           <CharacterMenu />
           <HandPanel />
           <GameCompletedDialog />
+          <OutdatedAlertDialog />
         </Overlay.Content>
       </Overlay>
       <GameCanvas>
