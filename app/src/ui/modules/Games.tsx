@@ -140,7 +140,8 @@ const DuelLobbyRowButton = ({ game }: { game: ComponentValue<Schema, Game> }) =>
 
   const [loading, setLoading] = useState(false)
 
-  const handleClaim = useCallback(async () => {
+  const handleClaim = useCallback(async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
     setLoading(true)
     await claim_duel_prize({
       account: account,
@@ -202,11 +203,9 @@ const DuelLobbyRowButton = ({ game }: { game: ComponentValue<Schema, Game> }) =>
     <p>Full</p>
   }
 
-  if (isOver && isParticipating && !isLobby && isWinner) {
-    return isClaimable ? (
+  if (isOver && isParticipating && !isLobby && isWinner && isClaimable) {
+    return (
       <Button className="py-2 w-36" disabled={loading} loading={loading} onClick={handleClaim}>Claim</Button>
-    ) : (
-      <Button className="py-2 w-36" disabled={true}>Claimed</Button>
     )
   }
 
