@@ -26,11 +26,11 @@ export const Discard = () => {
   } = useDojo();
 
   const { game } = useGame({ gameId });
-  const { currentTutorialStage } = useTutorial();
+  const { step } = useTutorial();
 
   const { handleDiscard, builder } = useActions();
 
-  const shouldDisplayTutorialTooltip = useMemo(() => !!currentTutorialStage, [currentTutorialStage]);
+  const shouldDisplayTutorialTooltip = useMemo(() => step == 7, [step]);
 
   if (!account || !game || !builder) return <></>;
 
