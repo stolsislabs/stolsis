@@ -3,7 +3,7 @@ import { useDojo } from "@/dojo/useDojo";
 import { getComponentValue, Has, HasValue } from "@dojoengine/recs";
 import { useEntityQuery } from "@dojoengine/react";
 import { Game } from "@/dojo/game/models/game";
-import { Mode } from "@/dojo/game/types/mode";
+import { Mode, ModeType } from "@/dojo/game/types/mode";
 
 export const useGames = ({ mode }: { mode: Mode }): { games: Game[] } => {
   const [games, setGames] = useState<any>({});
@@ -17,7 +17,10 @@ export const useGames = ({ mode }: { mode: Mode }): { games: Game[] } => {
     },
   } = useDojo();
 
-  const gameKeys = useEntityQuery([
+  const gameKeys = useEntityQuery(mode.value === ModeType.Duel ? [
+    Has(Game),
+    HasValue(Game, { mode: mode.into() })
+  ] : [
     Has(Game),
     HasValue(Game, { mode: mode.into() }),
     HasValue(Game, { over: true }),
