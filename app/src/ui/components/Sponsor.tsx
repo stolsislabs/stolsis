@@ -17,7 +17,7 @@ import { Button } from "@/ui/elements/button";
 import { useTournament } from "@/hooks/useTournament";
 import { useEffect, useMemo, useState } from "react";
 import { Lords } from "./Lords";
-import { Mode } from "@/dojo/game/types/mode";
+import { Mode, ModeType } from "@/dojo/game/types/mode";
 import { useDojo } from "@/dojo/useDojo";
 import { Account } from "starknet";
 
@@ -67,7 +67,7 @@ export const Sponsor = ({
     return "#111827";
   }, []);
 
-  return (
+  return mode.value !== ModeType.Duel && (
     <Dialog>
       <DialogTrigger disabled={disabled}>
         <Tooltip>
