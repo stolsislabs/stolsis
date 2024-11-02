@@ -42,7 +42,6 @@ export const TileTextures = memo(({ squareSize }: { squareSize: number }) => {
             key={index}
             tile={item.tile}
             size={squareSize}
-            length={findHighestId(tiles)}
             isTutorial={game?.mode.value === ModeType.Tutorial}
           />
         );
