@@ -29,7 +29,7 @@ import { DuelJoinDialogContent } from "../components/dom/dialogs/duels/DuelJoinD
 import { formatTime, formatTimeUntil } from "@/utils/time";
 import { useBuilders } from "@/hooks/useBuilders";
 import { cn } from "../utils";
-import { Spectate } from "../components/Tournament";
+import { Spectate } from "../components/dom/Spectate";
 
 export type GamesList = { [key: number]: ComponentValue<Schema, Game>; }
 
