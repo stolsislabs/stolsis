@@ -12,7 +12,7 @@ import { Address } from "../components/Address";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../elements/drawer";
 import leaderboardIcon from "/assets/icons/leaderboard.svg";
 import { Mode, ModeType } from "@/dojo/game/types/mode";
-import { Fragment, ReactNode, useMemo, useState } from "react";
+import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
 import { useDojo } from "@/dojo/useDojo";
 import { ComponentUpdate, ComponentValue, Has, Schema, defineEnterSystem, defineSystem } from "@dojoengine/recs";
 import { useNavigate } from "react-router-dom";
@@ -88,7 +88,9 @@ const GameTable = ({ gameMode }: { gameMode: Mode }) => {
 
   const hasCreatedGame = useMemo(() => builder !== null && account !== null && builder.player_id === account.address && gameMode.value !== ModeType.Duel, [account, builder, gameMode.value])
 
-  hasCreatedGame && navigate("?id=" + builder?.game_id, { replace: true })
+  useEffect(() => {
+    hasCreatedGame && navigate("?id=" + builder?.game_id, { replace: true })
+  }, [builder?.game_id, hasCreatedGame, navigate])
 
   useMemo(() => {
     defineEnterSystem(world, [Has(Game)], ({ value: [game] }: ComponentUpdate) => game && setGames(new GameClass(game)));
