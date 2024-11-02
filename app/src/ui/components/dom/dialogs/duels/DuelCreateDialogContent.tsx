@@ -80,7 +80,7 @@ export const DuelCreateDialogContent = ({ playerName, setOpen }: { playerName: s
                             <FormItem>
                                 <FormLabel>Game Name</FormLabel>
                                 <FormControl>
-                                    <Input type="text" defaultValue={form.formState.defaultValues?.name} {...field} />
+                                    <Input type="text" {...field} />
                                 </FormControl>
                                 <FormDescription>
                                     This is the name the game will be listed with.
@@ -96,7 +96,7 @@ export const DuelCreateDialogContent = ({ playerName, setOpen }: { playerName: s
                             <FormItem>
                                 <FormLabel>Duration (Seconds)</FormLabel>
                                 <FormControl>
-                                    <Input type="number" defaultValue={form.formState.defaultValues?.duration} {...field} />
+                                    <Input type="number" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -109,7 +109,7 @@ export const DuelCreateDialogContent = ({ playerName, setOpen }: { playerName: s
                             <FormItem>
                                 <FormLabel>Entry Price</FormLabel>
                                 <FormControl>
-                                    <Input type="number" defaultValue={form.formState.defaultValues?.price} {...field} />
+                                    <Input type="number" {...field} />
                                 </FormControl>
                                 <FormDescription>
                                     The price players must pay to enter the game.
