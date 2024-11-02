@@ -141,9 +141,7 @@ const InfoPanel = ({ gameMode }: { gameMode: Mode }) => (
   <div className="w-5/12 h-full z-20 bottom-0 p-4 shadow-2xl bg-primary hidden sm:flex sm:flex-col">
     <Address />
     <Player />
-    <div className="flex-grow overflow-y-auto my-4 border shadow-sm bg-white/90">
-      <Tournament mode={gameMode.value === ModeType.Tutorial || gameMode.value === ModeType.Duel ? new Mode(ModeType.Daily) : gameMode} />
-    </div>
+    <Tournament mode={gameMode.value === ModeType.Tutorial ? new Mode(ModeType.Daily) : gameMode} />
     <Links />
   </div>
 )
