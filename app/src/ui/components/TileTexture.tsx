@@ -106,6 +106,8 @@ export const TileTexture = ({ tile, size, isTutorial }: TileTextureProps) => {
   const strategyMode = useGameStore((state) => state.strategyMode);
   const visibilityCondition = isTutorial ? !strategyMode : strategyMode;
 
+  const isRoadWonder = useMemo(() => tileModelPath.slice(0, -5) === "wfffffffr", [tileModelPath]);
+
   const strategyMesh = useMemo(() => {
     if (!texture) return null;
     return (
@@ -134,7 +136,7 @@ export const TileTexture = ({ tile, size, isTutorial }: TileTextureProps) => {
         scale={scale}
         rotation={[
           Math.PI / 2,
-          (Math.PI / 2) * (1 - tile.orientation.into()),
+          (Math.PI / 2) * (1 - tile.orientation.into()) + (isRoadWonder ? -Math.PI / 2 : 0),
           0,
         ]}
         position={[position.x, position.y, 0]}
