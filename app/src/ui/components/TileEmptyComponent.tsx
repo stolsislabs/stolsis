@@ -7,14 +7,15 @@ import { createSquareGeometry, getSquarePosition } from "./TileTexture";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { checkFeatureIdle } from "@/dojo/game/helpers/conflict";
 import useSound from "use-sound";
+import { useShallow } from 'zustand/react/shallow'
 
 import Place from "/sounds/effects/p-place.m4a";
 import { useTileByKey } from "@/hooks/useTile";
 import { useActions } from "@/hooks/useActions";
 import { useGLTF } from "@react-three/drei";
+import { useTileWonder } from "@/hooks/useTileWonder";
 
 type TileEmptyComponentProps = {
-    modelPath: string
     size: number
     col: number
     row: number
@@ -24,9 +25,8 @@ type TileEmptyComponentProps = {
 
 const loader = new THREE.TextureLoader();
 
-export const TileEmptyComponent = ({ modelPath, size, col, row, tiles, isTutorial }: TileEmptyComponentProps) => {
+export const TileEmptyComponent = ({ size, col, row, tiles, isTutorial }: TileEmptyComponentProps) => {
     const [play] = useSound(Place);
-
     const { gameId } = useQueryParams();
     const { enabled } = useActions();
 
@@ -46,12 +46,42 @@ export const TileEmptyComponent = ({ modelPath, size, col, row, tiles, isTutoria
         setX,
         setY,
         setValid,
-    } = useGameStore();
+    } = useGameStore(
+        useShallow((state) => ({
+            orientation: state.orientation,
+            character: state.character,
+            spot: state.spot,
+            selectedTile: state.selectedTile,
+            setSelectedTile: state.setSelectedTile,
+            activeEntity: state.activeEntity,
+            hoveredTile: state.hoveredTile,
+            setHoveredTile: state.setHoveredTile,
+            setX: state.setX,
+            setY: state.setY,
+            setValid: state.setValid,
+        }))
+    );
 
-    const { tile: activeTile } = useTileByKey({ tileKey: activeEntity });
     const strategyMode = useGameStore((state) => state.strategyMode);
 
-    const model = useGLTF(`/models/${modelPath}.glb`).scene.clone()
+    const { tile: activeTile } = useTileByKey({ tileKey: activeEntity });
+
+    const wonderOrder = useGameStore((state) => state.wonderOrder);
+    const {
+        isRoadedWonder,
+        wonderRoadedIndex,
+        wonderUnroadedIndex
+    } = useTileWonder(activeTile);
+
+    const tileModelPath = useMemo(() => activeTile && activeTile.getVarietyModelPath(
+        col,
+        row,
+        wonderOrder[isRoadedWonder ? 1 : 0][isRoadedWonder ? wonderRoadedIndex : wonderUnroadedIndex]),
+        [activeTile, col, isRoadedWonder, row, wonderOrder, wonderRoadedIndex, wonderUnroadedIndex]
+    );
+    const isRoadWonder = useMemo(() => tileModelPath?.slice(0, -5) === "wfffffffr", [tileModelPath]);
+
+    const model = useGLTF(`/models/${tileModelPath}.glb`).scene.clone()
 
     const { northTile, eastTile, southTile, westTile } = useMemo(() => {
         return {
@@ -252,7 +282,7 @@ export const TileEmptyComponent = ({ modelPath, size, col, row, tiles, isTutoria
                     scale={scale}
                     rotation={[
                         Math.PI / 2,
-                        (Math.PI / 2) * (1 - (activeTile?.orientation.into() || 1)),
+                        (Math.PI / 2) * (1 - (activeTile?.orientation.into() || 1)) + + (isRoadWonder ? -Math.PI / 2 : 0),
                         0,
                     ]}
                     position={[position.x, position.y, 0]}

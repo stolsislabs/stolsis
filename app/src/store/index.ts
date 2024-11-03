@@ -108,6 +108,8 @@ interface GameState {
   resetValid: () => void;
   strategyMode: boolean;
   setStrategyMode: (strategyMode: boolean) => void;
+  wonderOrder: Array<Array<number>>;
+  randomizeOrder: (gameId: number) => void;
 }
 
 export const useActionsStore = create<ActionState>((set, get) => ({
@@ -206,6 +208,25 @@ export const useGameStore = create<GameState>()((set, get) => ({
   resetValid: () => set({ valid: false }),
   strategyMode: true,
   setStrategyMode: (strategyMode) => set({ strategyMode }),
+  wonderOrder: [[1, 2, 3, 4], [1, 2]], // first array for unroaded wonders (wffffffff), second array for roaded wonders ((wfffffffr))
+  randomizeOrder: (gameId: number) => {
+    const hashCode = (num: number) => {
+      return Math.abs(num * 1103515245 + 12345) % 2147483647;
+    };
+
+    const shuffle = (array: number[], salt: number = 0) => {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(hashCode(gameId + salt + i) % (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    };
+
+    const firstArray = shuffle([1, 2, 3, 4]);
+    const secondArray = shuffle([1, 2], 123);
+    set({ wonderOrder: [firstArray, secondArray] });
+  }
 }));
 
 interface UIState {

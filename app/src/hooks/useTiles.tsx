@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDojo } from "@/dojo/useDojo";
 import {
   getComponentValue,
@@ -9,6 +9,8 @@ import {
 } from "@dojoengine/recs";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useEntityQuery } from "@dojoengine/react";
+import { Tile } from "@/dojo/game/models/tile";
+import { PlanType } from "@/dojo/game/types/plan";
 
 type Position = {
   col: number;
@@ -27,7 +29,7 @@ type Items = {
 export const useTiles = () => {
   const { gameId } = useQueryParams();
   const [items, setItems] = useState<Items>({});
-  const [tiles, setTiles] = useState<any>({});
+  const [tiles, setTiles] = useState<Map<string, Tile>>(new Map());
   const [keys, setKeys] = useState<Entity[]>([]);
   const [trigger, setTrigger] = useState(false);
 
@@ -57,6 +59,7 @@ export const useTiles = () => {
       const tileKey = `${tile.gameId}-${tile.id}`;
       const positionKey = `${tile.gameId}-${tile.x}-${tile.y}`;
       return { ...prevTiles, [tileKey]: tile, [positionKey]: tile };
+
     });
 
     // Create a new item for the tile
@@ -118,5 +121,20 @@ export const useTiles = () => {
     setKeys(tileKeys);
   }, [tileKeys, trigger]);
 
-  return { tiles, items };
+  const getTileIdsByType = useCallback((planType: PlanType): Record<string, number[]> => {
+    const tileIds = Object.values(tiles).reduce((acc, tile) => {
+      if (tile.plan.value === planType) {
+        acc[tile.playerId] = acc[tile.playerId] || [];
+        acc[tile.playerId].push(tile.id);
+      }
+      return acc;
+    }, {} as Record<string, string[]>);
+
+    return tileIds;
+  }, [tiles]);
+
+  const wonderRoadedTileIds = useMemo(() => getTileIdsByType(PlanType.WFFFFFFFR), [getTileIdsByType]);
+  const wonderUnroadedTileIds = useMemo(() => getTileIdsByType(PlanType.WFFFFFFFF), [getTileIdsByType]);
+
+  return { tiles, items, wonderRoadedTileIds, wonderUnroadedTileIds };
 };

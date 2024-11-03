@@ -1,4 +1,4 @@
-import { useUIStore } from "@/store";
+import { useGameStore, useUIStore } from "@/store";
 import { Overlay } from "../components/dom/Overlay";
 import { GameCanvas } from "../components/canvas/GameCanvas";
 import { ScreenshotCube } from "../components/canvas/ScreenshotCube";
@@ -11,14 +11,24 @@ import { IngameStatus } from "../components/dom/IngameStatus";
 import { NavigationMenu } from "../components/dom/NavigationMenu";
 import { CharacterMenu } from "../components/dom/CharacterMenu";
 import { HandPanel } from "../components/dom/HandPanel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GameCompletedDialog } from "../components/dom/dialogs/GameCompleteDialog";
 import { OutdatedAlertDialog } from "../components/dom/dialogs/OutdatedAlertDialog";
+import { useGame } from "@/hooks/useGame";
+import { useQueryParams } from "@/hooks/useQueryParams";
 
 // TODO: Remove all TooltipProviders except for one in "main.tsx"
 const GameScreen = () => {
   const loading = useUIStore((state) => state.loading);
   const [hasOpenMenu, setHasOpenMenu] = useState<boolean>(false);
+  const { gameId } = useQueryParams();
+  const { game } = useGame({ gameId: gameId });
+  const randomizeOrder = useGameStore(state => state.randomizeOrder)
+
+  useEffect(() => {
+    if (!game) return;
+    randomizeOrder(Number(game.id));
+  }, [game, randomizeOrder]);
 
   return (
     <main

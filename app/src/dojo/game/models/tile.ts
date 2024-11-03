@@ -74,7 +74,7 @@ export class Tile {
     return this.occupiedSpot.value === SpotType.None;
   }
 
-  getVarietyModelPath(x: number = this.x, y: number = this.y): string {
+  getVarietyModelPath(x: number = this.x, y: number = this.y, wonderVarietyNum?: number): string {
     const input = `${this.plan.value}${x}${y}${this.gameId}`;
     let hash = 0;
     for (let i = 0; i < input.length; i++) {
@@ -85,7 +85,9 @@ export class Tile {
 
     const name = this.plan.value.toLowerCase();
     const density = Math.abs(hash) % 2 === 0 ? "LF" : "HF";
-    const variation = (Math.abs(hash) % getModelVariations({ plan: index })) + 1;
+    const variation = !wonderVarietyNum || wonderVarietyNum > getModelVariations({ plan: index })
+      ? (Math.abs(hash) % getModelVariations({ plan: index })) + 1
+      : wonderVarietyNum;
 
     return `${name}_${density}_${variation}`;
   }
