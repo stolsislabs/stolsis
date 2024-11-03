@@ -1,9 +1,11 @@
 import * as THREE from "three";
 import { offset, other_offset } from "@/dojo/game";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useGameStore } from "@/store";
 import { useGLTF } from "@react-three/drei";
 import { Tile } from "@/dojo/game/models/tile";
+import { useTiles } from "@/hooks/useTiles";
+import { PlanType } from "@/dojo/game/types/plan";
 
 type TileTextureProps = { tile: Tile, size: number, isTutorial: boolean }
 
@@ -16,9 +18,17 @@ export const createSquareGeometry = (size: any) => {
 export const TileTexture = ({ tile, size, isTutorial }: TileTextureProps) => {
   const meshRef = useRef<any>();
   const [texture, setTexture] = useState<THREE.Texture | undefined>(undefined);
-  const { setHoveredTile } = useGameStore();
+  const { wonderRoadedCount, wonderUnroadedCount } = useTiles();
 
-  const tileModelPath = useMemo(() => tile.getVarietyModelPath(), [tile])
+  const wonderOrder = useGameStore((state) => state.wonderOrder);
+  const setHoveredTile = useGameStore((state) => state.setHoveredTile);
+
+
+  const isRoadedWonder = useMemo(() => tile.plan.value === PlanType.WFFFFFFFR, [tile]);
+  const isUnroadedWonder = useMemo(() => tile.plan.value === PlanType.WFFFFFFFF, [tile]);
+  const wonderVarietyNum = isUnroadedWonder ? wonderOrder[0][wonderUnroadedCount[tile.playerId]] : isRoadedWonder ? wonderOrder[1][wonderRoadedCount[tile.playerId]] : undefined;
+  console.log(wonderOrder, wonderUnroadedCount[tile.playerId])
+  const tileModelPath = useMemo(() => tile.getVarietyModelPath(tile.x, tile.y, wonderVarietyNum), [tile, wonderVarietyNum]);
 
   const model = useGLTF(`/models/${tileModelPath}.glb`).scene.clone()
   const squareGeometry = useMemo(() => createSquareGeometry(size), [size]);
@@ -42,11 +52,11 @@ export const TileTexture = ({ tile, size, isTutorial }: TileTextureProps) => {
     }
   }, [tile]);
 
-  const handlePointerEnter = () => {
+  const handlePointerEnter = useCallback(() => {
     const col = tile ? tile?.y - offset + other_offset : 0;
     const row = tile ? tile?.x - offset + other_offset : 0;
     setHoveredTile({ col, row });
-  };
+  }, [setHoveredTile, tile]);
 
   const shadowedModel = useMemo(() => {
     const box = new THREE.Box3().setFromObject(model);
