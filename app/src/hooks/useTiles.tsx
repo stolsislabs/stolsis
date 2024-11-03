@@ -57,7 +57,9 @@ export const useTiles = () => {
     // Update the tiles
     setTiles((prevTiles: typeof Tile) => {
       const tileKey = `${tile.gameId}-${tile.id}`;
-      return { ...prevTiles, [tileKey]: tile };
+      const positionKey = `${tile.gameId}-${tile.x}-${tile.y}`;
+      return { ...prevTiles, [tileKey]: tile, [positionKey]: tile };
+
     });
 
     // Create a new item for the tile
