@@ -11,17 +11,6 @@ export const TileTextures = memo(({ squareSize }: { squareSize: number }) => {
   const { game } = useGame(gameId);
   const { tiles, items } = useTiles();
 
-  function findHighestId(obj: any) {
-    let highestId = -Infinity; // Start with the smallest possible number
-    Object.keys(obj).forEach((key) => {
-      const currentId = obj[key].id;
-      if (currentId > highestId) {
-        highestId = currentId;
-      }
-    });
-    return highestId;
-  }
-
   const renderedItems = useMemo(() => {
     return Object.keys(items).map((key: string, index) => {
       const item = items[key];
@@ -42,7 +31,6 @@ export const TileTextures = memo(({ squareSize }: { squareSize: number }) => {
             key={index}
             tile={item.tile}
             size={squareSize}
-            length={findHighestId(tiles)}
             isTutorial={game?.mode.value === ModeType.Tutorial}
           />
         );

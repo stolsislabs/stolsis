@@ -106,7 +106,7 @@ export const Tournament = ({ mode }: { mode: Mode }) => {
         <TableHeader>
           <TableRow className="text-3xs lg: lg:text-xs sm:[&>*]:h-1 lg:[&>*]:h-10 [&>*]:text-foreground tracking-widest">
             {(mode.value === ModeType.Duel ? duelHeaders : soloHeaders).map(header => (
-              <TableHead className={header.toLowerCase() === "player" ? "max-w-[100px]" : header.toLowerCase() !== "#" ? "text-end" : ""}>{header}</TableHead>
+              <TableHead key={header.toLowerCase()} className={header.toLowerCase() === "player" ? "max-w-[100px]" : header.toLowerCase() !== "#" ? "text-end" : ""}>{header}</TableHead>
             ))}
           </TableRow>
         </TableHeader>

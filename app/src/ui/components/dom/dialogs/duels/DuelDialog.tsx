@@ -4,11 +4,11 @@ import { ModeType } from "@/dojo/game/types/mode";
 import { useBuilder } from "@/hooks/useBuilder";
 import { useLobby } from "@/hooks/useLobby";
 import { AlertDialog, AlertDialogTrigger } from "@/ui/elements/alert-dialog";
-import { useMemo, useState } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import { DuelCreateDialogContent } from "./DuelCreateDialogContent";
 import { DuelLobbyDialogContent } from "./DuelLobbyDialogContent";
 
-export const DuelDialog = ({ playerName }: { playerName: string }) => {
+export const DuelDialog = forwardRef(({ playerName }: { playerName: string }) => {
     const {
         account: { account },
     } = useDojo();
@@ -45,4 +45,4 @@ export const DuelDialog = ({ playerName }: { playerName: string }) => {
             {isInLobby ? <DuelLobbyDialogContent setOpen={setOpen} open={open} game={isInLobby} /> : <DuelCreateDialogContent setOpen={setOpen} playerName={playerName} />}
         </AlertDialog>
     );
-};
+})
