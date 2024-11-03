@@ -7,7 +7,7 @@ import { useAccount } from "@starknet-react/core";
 type OverlayProps = { children: ReactNode };
 
 export const Overlay = ({ children }: OverlayProps) => {
-  const { resetHoveredTile } = useGameStore();
+  const resetHoveredTile = useGameStore(state => state.resetHoveredTile);
 
   return (
     <div className="z-20 pointer-events-none" onMouseEnter={resetHoveredTile}>

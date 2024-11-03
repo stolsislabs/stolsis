@@ -4,6 +4,7 @@ import { useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { useShallow } from 'zustand/react/shallow'
 
 export const Rig = () => {
   const {
@@ -16,7 +17,19 @@ export const Rig = () => {
     rotation,
     resetButPosition,
     resetCompassRotation,
-  } = useCameraStore();
+  } = useCameraStore(
+    useShallow((state) => ({
+      position: state.position,
+      zoom: state.zoom,
+      near: state.near,
+      far: state.far,
+      reset: state.reset,
+      resetAll: state.resetAll,
+      rotation: state.rotation,
+      resetButPosition: state.resetButPosition,
+      resetCompassRotation: state.resetCompassRotation,
+    }))
+  );
 
   const { camera } = useThree();
   const controls = useRef<OrbitControlsImpl>(null);

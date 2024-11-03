@@ -62,10 +62,10 @@ export const TileEmptyComponent = ({ size, col, row, tiles, isTutorial }: TileEm
         }))
     );
 
-    const strategyMode = useGameStore((state) => state.strategyMode);
 
     const { tile: activeTile } = useTileByKey({ tileKey: activeEntity });
 
+    const strategyMode = useGameStore((state) => state.strategyMode);
     const wonderOrder = useGameStore((state) => state.wonderOrder);
     const {
         isRoadedWonder,

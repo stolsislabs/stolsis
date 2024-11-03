@@ -12,6 +12,7 @@ import Points from "/sounds/effects/points.wav";
 import { useTutorial } from "./useTutorial";
 import { ModeType } from "@/dojo/game/types/mode";
 import { toast } from "sonner";
+import { useShallow } from 'zustand/react/shallow'
 
 export const useActions = () => {
   const { gameId } = useQueryParams();
@@ -30,11 +31,36 @@ export const useActions = () => {
     resetHoveredTile,
     resetOrientation,
     valid,
-  } = useGameStore();
+  } = useGameStore(
+    useShallow((state) => ({
+      orientation: state.orientation,
+      x: state.x,
+      y: state.y,
+      character: state.character,
+      spot: state.spot,
+      selectedTile: state.selectedTile,
+      resetX: state.resetX,
+      resetY: state.resetY,
+      resetCharacter: state.resetCharacter,
+      resetSpot: state.resetSpot,
+      resetSelectedTile: state.resetSelectedTile,
+      resetHoveredTile: state.resetHoveredTile,
+      resetOrientation: state.resetOrientation,
+      valid: state.valid,
+    }))
+  );
+
   const [play, { stop }] = useSound(Click);
   const [playPoints] = useSound(Points);
   const { game } = useGame({ gameId });
-  const { disabled, setDisabled, enabled, setEnabled } = useActionsStore();
+  const { disabled, setDisabled, enabled, setEnabled } = useActionsStore(
+    useShallow((state) => ({
+      disabled: state.disabled,
+      setDisabled: state.setDisabled,
+      enabled: state.enabled,
+      setEnabled: state.setEnabled,
+    }))
+  );
 
   const loading = useUIStore((state) => state.loading);
   const setLoading = useUIStore((state) => state.setLoading);

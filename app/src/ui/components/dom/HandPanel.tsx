@@ -8,13 +8,22 @@ import { useGameStore } from "@/store";
 import useSound from "use-sound";
 import { useMemo, useCallback } from "react";
 import { useTutorial } from "@/hooks/useTutorial";
+import { useShallow } from 'zustand/react/shallow'
 
 export const HandPanel = () => {
   const [play] = useSound(RotationSound);
   const { enabled } = useActions();
-  const { x, y, spot, character } = useGameStore();
+  const { x, y, spot, character } = useGameStore(
+    useShallow((state) => ({
+      x: state.x,
+      y: state.y,
+      spot: state.spot,
+      character: state.character,
+    }))
+  );
   const { currentTutorialStage } = useTutorial();
-  const { orientation, setOrientation } = useGameStore();
+  const orientation = useGameStore(state => state.orientation);
+  const setOrientation = useGameStore(state => state.setOrientation);
   const { handleConfirm, disabled } = useActions();
 
   const handleRotate = useCallback(() => {

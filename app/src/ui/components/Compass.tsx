@@ -6,7 +6,8 @@ import { IngameButton } from "./dom/IngameButton";
 
 // TODO: Remove redundant component (move correct functionality to camera instead, custom hook called from NavigationMenu instead etc.)
 export const Compass = () => {
-  const { compassRotation, setCompassRotate } = useCameraStore();
+  const compassRotation = useCameraStore(state => state.compassRotation);
+  const setCompassRotate = useCameraStore(state => state.setCompassRotate);
   const [rotation, setRotation] = useState(0);
   const [rotate, setRotate] = useState(false);
 
