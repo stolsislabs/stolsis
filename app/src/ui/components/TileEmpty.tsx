@@ -188,11 +188,9 @@ export const TileEmpty = ({ tiles, col, row, size, isTutorial }: any) => {
 
   const { currentTutorialStage } = useTutorial();
 
-  const modelPath = useMemo(() => activeTile?.getVarietyModelPath(col, row), [activeTile, col, row]);
-
   return (
     <>
-      {activeTile && <TileEmptyComponent modelPath={modelPath ?? ""} size={size} col={col} row={row} tiles={tiles} isTutorial={isTutorial} />}
+      {activeTile && <TileEmptyComponent size={size} col={col} row={row} tiles={tiles} isTutorial={isTutorial} />}
       <group position={[position.x, position.y, 0]}>
         <mesh
           visible={!texture}
