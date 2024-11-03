@@ -18,6 +18,7 @@ import { Loader } from "@/ui/components/Loader";
 import { useDojo } from "@/dojo/useDojo";
 import { useTutorial } from "@/hooks/useTutorial";
 import { ModeType } from "@/dojo/game/types/mode";
+import { useShallow } from 'zustand/react/shallow'
 
 export const Tile = () => {
   const [rotation, setRotation] = useState(0);
@@ -25,7 +26,14 @@ export const Tile = () => {
   const { enabled } = useActions();
   const { gameId } = useQueryParams();
   const { orientation, setOrientation, setActiveEntity, resetActiveEntity } =
-    useGameStore();
+    useGameStore(
+      useShallow((state) => ({
+        orientation: state.orientation,
+        setOrientation: state.setOrientation,
+        setActiveEntity: state.setActiveEntity,
+        resetActiveEntity: state.resetActiveEntity,
+      }))
+    );
   const {
     account: { account },
   } = useDojo();
@@ -78,7 +86,14 @@ export const Tile = () => {
   );
   const isLocked = useMemo(() => game?.isOver(), [game]);
 
-  const { x, y, spot, character } = useGameStore();
+  const { x, y, spot, character } = useGameStore(
+    useShallow((state) => ({
+      x: state.x,
+      y: state.y,
+      spot: state.spot,
+      character: state.character,
+    }))
+  );
 
   const shouldDisplayTutorialTooltip = useMemo(() => {
     if (!currentTutorialStage) return false;
@@ -153,7 +168,7 @@ export const ActiveTile = ({
   rotation: number;
   orientation: number;
 }) => {
-  const { character } = useGameStore();
+  const character = useGameStore(state => state.character);
   const spots = useMemo(
     () => ["NW", "W", "SW", "N", "C", "S", "NE", "E", "SE"],
     [],

@@ -1,12 +1,20 @@
 import { useGameStore } from "@/store";
 import RotationSound from "/sounds/effects/rotation.wav";
 import useSound from "use-sound";
+import { useShallow } from 'zustand/react/shallow'
 
 export const useHand = () => {
   const [play] = useSound(RotationSound);
 
   const { orientation, setOrientation, strategyMode, setStrategyMode } =
-    useGameStore();
+    useGameStore(
+      useShallow((state) => ({
+        orientation: state.orientation,
+        setOrientation: state.setOrientation,
+        strategyMode: state.strategyMode,
+        setStrategyMode: state.setStrategyMode,
+      }))
+    );
 
   const rotateHand = () => {
     play();

@@ -12,7 +12,8 @@ export const Spot = (props: TProps) => {
   const [play, { stop }] = useSound(onCharacterPlace);
   const { index } = props;
   const [selected, setSelected] = useState(false);
-  const { spot, setSpot } = useGameStore();
+  const spot = useGameStore(state => state.spot);
+  const setSpot = useGameStore(state => state.setSpot);
 
   useEffect(() => {
     setSelected(index === getIndexFromSpot(spot));
@@ -33,9 +34,8 @@ export const Spot = (props: TProps) => {
       onClick={handleClick}
     >
       <div
-        className={`h-4 w-4 rounded-full ${
-          selected ? "bg-slate-600" : "bg-white"
-        }`}
+        className={`h-4 w-4 rounded-full ${selected ? "bg-slate-600" : "bg-white"
+          }`}
       />
     </div>
   );

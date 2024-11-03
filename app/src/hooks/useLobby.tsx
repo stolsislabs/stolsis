@@ -1,9 +1,17 @@
 import { Mode, ModeType } from "@/dojo/game/types/mode";
 import { useLobbyStore } from "@/store";
 import { useMemo } from "react";
+import { useShallow } from 'zustand/react/shallow'
 
 export const useLobby = () => {
-  const { mode, setMode: setStoreMode, games, setGames } = useLobbyStore();
+  const { mode, setMode: setStoreMode, games, setGames } = useLobbyStore(
+    useShallow((state) => ({
+      mode: state.mode,
+      setMode: state.setMode,
+      games: state.games,
+      setGames: state.setGames,
+    }))
+  );
 
   const gameMode: Mode = useMemo(() => {
     if (mode === ModeType.Weekly) {

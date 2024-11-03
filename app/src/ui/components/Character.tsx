@@ -23,6 +23,7 @@ import woodsman from "/assets/icons/woodsman.svg";
 import herdsman from "/assets/icons/herdsman.svg";
 import { IngameButton } from "./dom/IngameButton";
 import { useTutorial } from "@/hooks/useTutorial";
+import { useShallow } from 'zustand/react/shallow'
 
 interface TProps {
   index: number;
@@ -33,8 +34,15 @@ export const Character = (props: TProps) => {
   const { gameId } = useQueryParams();
   const { index, enable } = props;
   const [selected, setSelected] = useState(false);
-  const { character, setCharacter, resetCharacter, resetSpot } = useGameStore();
-  const { setPosition } = useCameraStore();
+  const { character, setCharacter, resetCharacter, resetSpot } = useGameStore(
+    useShallow((state) => ({
+      character: state.character,
+      setCharacter: state.setCharacter,
+      resetCharacter: state.resetCharacter,
+      resetSpot: state.resetSpot,
+    }))
+  );
+  const setPosition = useCameraStore(state => state.setPosition);
   const {
     account: { account },
   } = useDojo();
@@ -91,7 +99,8 @@ export const Character = (props: TProps) => {
   };
 
   const { currentTutorialStage } = useTutorial();
-  const { x, y } = useGameStore();
+  const x = useGameStore(state => state.x);
+  const y = useGameStore(state => state.y);
 
   const shouldDisplayTutorialTooltip = useMemo(() => {
     if (!currentTutorialStage) return false;
@@ -159,9 +168,8 @@ export const Spot = (props: { spot: string; index: number }) => {
 
   return (
     <div
-      className={`h-2 w-2 rounded-full ${color} ${ringColor} ${
-        boosted ? "ring-2" : "ring-0"
-      }`}
+      className={`h-2 w-2 rounded-full ${color} ${ringColor} ${boosted ? "ring-2" : "ring-0"
+        }`}
     />
   );
 };

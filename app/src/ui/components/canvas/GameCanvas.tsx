@@ -69,7 +69,7 @@ const Setup = ({ children }: { children: React.ReactNode }) => {
 };
 
 const Scene = ({ children }: { children: React.ReactNode }) => {
-  const { compassRotation } = useCameraStore(); // TODO: Fix this functionality to rotate camera instead
+  const compassRotation = useCameraStore(state => state.compassRotation); // TODO: Fix this functionality to rotate camera instead
 
   return (
     <group rotation={[0, 0, compassRotation]} position={[0, 0, 0]}>

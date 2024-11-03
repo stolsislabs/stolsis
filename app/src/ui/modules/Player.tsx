@@ -6,7 +6,7 @@ import { useLobbyStore } from "@/store";
 import { useDojo } from "@/dojo/useDojo";
 
 export const Player = () => {
-  const { playerEntity } = useLobbyStore();
+  const playerEntity = useLobbyStore(state => state.playerEntity);
   // const { account } = useAccount();
   const {
     account: { account },

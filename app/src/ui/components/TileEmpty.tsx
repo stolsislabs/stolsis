@@ -16,6 +16,7 @@ import { useTutorial } from "@/hooks/useTutorial";
 import { useDojo } from "@/dojo/useDojo";
 import { useBuilder } from "@/hooks/useBuilder";
 import { TileEmptyComponent } from "./TileEmptyComponent";
+import { useShallow } from 'zustand/react/shallow'
 
 const loader = new THREE.TextureLoader();
 
@@ -42,7 +43,21 @@ export const TileEmpty = ({ tiles, col, row, size, isTutorial }: any) => {
     setX,
     setY,
     setValid,
-  } = useGameStore();
+  } = useGameStore(
+    useShallow((state) => ({
+      orientation: state.orientation,
+      character: state.character,
+      spot: state.spot,
+      selectedTile: state.selectedTile,
+      setSelectedTile: state.setSelectedTile,
+      activeEntity: state.activeEntity,
+      hoveredTile: state.hoveredTile,
+      setHoveredTile: state.setHoveredTile,
+      setX: state.setX,
+      setY: state.setY,
+      setValid: state.setValid,
+    }))
+  );
 
   const { tile: activeTile } = useTileByKey({ tileKey: activeEntity });
 
@@ -226,7 +241,7 @@ const TileHighlight = ({ size }: { size: number }) => {
     tileId: builder?.tile_id || 0,
   });
 
-  const { selectedTile } = useGameStore();
+  const selectedTile = useGameStore(state => state.selectedTile);
   const { currentTutorialStage } = useTutorial();
 
   const orientation = currentTutorialStage?.presetTransaction.orientation;
@@ -266,7 +281,8 @@ const TileHighlight = ({ size }: { size: number }) => {
 
 const TileHighlightTooltip = () => {
   const { currentTutorialStage } = useTutorial();
-  const { x, y } = useGameStore();
+  const x = useGameStore(state => state.x);
+  const y = useGameStore(state => state.y);
 
   const horizontalTextOffset = 6;
   const verticalTextOffset = 2;
