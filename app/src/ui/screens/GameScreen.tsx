@@ -27,7 +27,7 @@ const GameScreen = () => {
 
   useEffect(() => {
     if (!game) return;
-    randomizeOrder(game.seed);
+    randomizeOrder(Number(game.id));
   }, [game, randomizeOrder]);
 
   return (
