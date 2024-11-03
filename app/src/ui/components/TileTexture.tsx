@@ -4,8 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useGameStore } from "@/store";
 import { useGLTF } from "@react-three/drei";
 import { Tile } from "@/dojo/game/models/tile";
-import { useTiles } from "@/hooks/useTiles";
-import { PlanType } from "@/dojo/game/types/plan";
+import { useTileWonder } from "@/hooks/useTileWonder";
 
 type TileTextureProps = { tile: Tile, size: number, isTutorial: boolean }
 
@@ -18,17 +17,22 @@ export const createSquareGeometry = (size: any) => {
 export const TileTexture = ({ tile, size, isTutorial }: TileTextureProps) => {
   const meshRef = useRef<any>();
   const [texture, setTexture] = useState<THREE.Texture | undefined>(undefined);
-  const { wonderRoadedCount, wonderUnroadedCount } = useTiles();
 
-  const wonderOrder = useGameStore((state) => state.wonderOrder);
   const setHoveredTile = useGameStore((state) => state.setHoveredTile);
 
+  const wonderOrder = useGameStore((state) => state.wonderOrder);
+  const {
+    isRoadedWonder,
+    wonderRoadedIndex,
+    wonderUnroadedIndex
+  } = useTileWonder(tile);
 
-  const isRoadedWonder = useMemo(() => tile.plan.value === PlanType.WFFFFFFFR, [tile]);
-  const isUnroadedWonder = useMemo(() => tile.plan.value === PlanType.WFFFFFFFF, [tile]);
-  const wonderVarietyNum = isUnroadedWonder ? wonderOrder[0][wonderUnroadedCount[tile.playerId]] : isRoadedWonder ? wonderOrder[1][wonderRoadedCount[tile.playerId]] : undefined;
-  console.log(wonderOrder, wonderUnroadedCount[tile.playerId])
-  const tileModelPath = useMemo(() => tile.getVarietyModelPath(tile.x, tile.y, wonderVarietyNum), [tile, wonderVarietyNum]);
+  const tileModelPath = useMemo(() => tile.getVarietyModelPath(
+    tile.x,
+    tile.y,
+    wonderOrder[isRoadedWonder ? 1 : 0][isRoadedWonder ? wonderRoadedIndex : wonderUnroadedIndex]),
+    [isRoadedWonder, tile, wonderOrder, wonderRoadedIndex, wonderUnroadedIndex]
+  );
 
   const model = useGLTF(`/models/${tileModelPath}.glb`).scene.clone()
   const squareGeometry = useMemo(() => createSquareGeometry(size), [size]);
@@ -104,7 +108,7 @@ export const TileTexture = ({ tile, size, isTutorial }: TileTextureProps) => {
       }
     });
     return model;
-  }, []);
+  }, [tileModelPath]);
 
   const scale = useMemo(() => {
     if (!shadowedModel) return 1;
@@ -142,7 +146,7 @@ export const TileTexture = ({ tile, size, isTutorial }: TileTextureProps) => {
     <>
       <group
         visible={!visibilityCondition}
-        key={`tile-${tile.id}`}
+        key={`tile-${tile.id}-${tileModelPath}`}
         scale={scale}
         rotation={[
           Math.PI / 2,
@@ -151,7 +155,7 @@ export const TileTexture = ({ tile, size, isTutorial }: TileTextureProps) => {
         ]}
         position={[position.x, position.y, 0]}
       >
-        <primitive castShadow receiveShadow object={shadowedModel} />
+        <primitive key={tileModelPath} castShadow receiveShadow object={shadowedModel} />
       </group>
 
       {strategyMesh}
