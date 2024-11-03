@@ -119,22 +119,20 @@ export const useTiles = () => {
     setKeys(tileKeys);
   }, [tileKeys, trigger]);
 
-  const countWondersByType = useCallback((planType: PlanType): Record<string, number> => {
-    const counts = Object.values(tiles).reduce((acc, tile) => {
+  const getTileIdsByType = useCallback((planType: PlanType): Record<string, number[]> => {
+    const tileIds = Object.values(tiles).reduce((acc, tile) => {
       if (tile.plan.value === planType) {
-        acc[tile.playerId] = (acc[tile.playerId] || 0) + 1;
+        acc[tile.playerId] = acc[tile.playerId] || [];
+        acc[tile.playerId].push(tile.id);
       }
       return acc;
-    }, {} as Record<string, number>);
+    }, {} as Record<string, string[]>);
 
-    return Object.fromEntries(
-      Object.entries(counts).map(([id, count]) => [id, (count as number)])
-    );
+    return tileIds;
   }, [tiles]);
 
+  const wonderRoadedTileIds = useMemo(() => getTileIdsByType(PlanType.WFFFFFFFR), [getTileIdsByType]);
+  const wonderUnroadedTileIds = useMemo(() => getTileIdsByType(PlanType.WFFFFFFFF), [getTileIdsByType]);
 
-  const wonderRoadedCount = useMemo(() => countWondersByType(PlanType.WFFFFFFFR), [countWondersByType]);
-  const wonderUnroadedCount = useMemo(() => countWondersByType(PlanType.WFFFFFFFF), [countWondersByType]);
-
-  return { tiles, items, wonderRoadedCount, wonderUnroadedCount };
+  return { tiles, items, wonderRoadedTileIds, wonderUnroadedTileIds };
 };
