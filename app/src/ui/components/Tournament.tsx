@@ -182,7 +182,7 @@ const Header = ({ mode, page, setPage }: { mode: Mode, page: number, setPage: Re
                 href="#"
                 isActive={id === (page ? page : tournaments.length)}
                 onClick={() => setPage(id)}
-                className="size-6 text-3xs md:text-2xs lg:size-8"
+                className="size-8 text-3xs lg:p-1 md:text-2xs"
               >
                 {id}
               </PaginationLink>
