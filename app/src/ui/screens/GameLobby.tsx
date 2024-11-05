@@ -18,6 +18,7 @@ import { ComponentUpdate, ComponentValue, Has, Schema, defineEnterSystem, define
 import { useNavigate } from "react-router-dom";
 import { useBuilder } from "@/hooks/useBuilder";
 import { OutdatedAlertDialog } from "../components/dom/dialogs/OutdatedAlertDialog";
+import { cn } from "../utils";
 
 const tabs = ["daily", "weekly", "duel", "tutorial"];
 const disabledTabs = [""]; // Keep in case we need to temporarily disable tabs
@@ -36,10 +37,7 @@ export const GameLobby = () => {
       <BoxRainScene />
       <PanelsContainer>
         <GameTablePanel>
-          <PanelsContainerHeader>
-            <img src={banner} className="h-full" />
-            <MusicPlayer />
-          </PanelsContainerHeader>
+          <PanelsContainerHeader />
           <GameTable gameMode={gameMode} />
         </GameTablePanel>
         <InfoPanel gameMode={gameMode} />
@@ -55,16 +53,38 @@ const GameTablePanel = ({ children }: { children: ReactNode }) => (
   </div>
 )
 
-const PanelsContainer = ({ children }: { children: ReactNode }) => (
-  <div className="flex w-full gap-8">
-    <div className="absolute top-0 left-0 z-0 flex w-full h-full bg-white/90 pointer-events-none" />
-    {children}
-  </div>
-)
+const PanelsContainer = ({ children }: { children: ReactNode }) => {
+  const [orientation, setOrientation] = useState(window.screen.orientation.type);
 
-const PanelsContainerHeader = ({ children }: { children: ReactNode }) => (
-  <div className="h-24 flex justify-between w-full flex-shrink-0">
-    {children}
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      setOrientation(window.screen.orientation.type);
+    };
+
+    window.addEventListener('orientationchange', handleOrientationChange);
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, []);
+
+  return (
+    <div className={cn(
+      "flex w-full",
+      orientation === 'landscape-secondary' ? "pr-safe-right" : orientation === "landscape-primary" ? "pl-safe-left" : "",
+    )}>
+      <div className="absolute top-0 left-0 z-0 flex w-full h-full bg-white/90 pointer-events-none" />
+      {children}
+    </div>
+  );
+}
+
+// In GameLobby.tsx, modify the PanelsContainerHeader:
+const PanelsContainerHeader = () => (
+  <div className="h-24 flex items-center w-full flex-shrink-0">
+    <img src={banner} className="h-full max-w-[80%]" />
+    <div className="ml-auto">
+      <MusicPlayer />
+    </div>
   </div>
 )
 
