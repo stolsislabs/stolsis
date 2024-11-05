@@ -1,14 +1,14 @@
+import { cn } from "../utils";
+
 export const Lords = ({
   fill,
-  width = 8,
-  height = 8,
+  className
 }: {
   fill: string;
-  width?: number;
-  height?: number;
+  className?: string;
 }) => {
   return (
-    <div className={`w-${width} h-${height} self-center`}>
+    <div className={cn("self-center", className)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

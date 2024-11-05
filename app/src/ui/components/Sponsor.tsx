@@ -73,15 +73,15 @@ export const Sponsor = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <div
-              className="flex justify-between items-center gap-4 text-white py-2 px-16"
+              className="flex justify-between items-center gap-1 lg:gap-4 text-white py-1 lg:py-2 px-16"
               style={{ backgroundColor }}
             >
-              <Lords fill={"white"} />
-              <div className="flex flex-col justify-center items-center text-xl gap-1">
-                <p className="text-xs">Lords Pool</p>
-                <p className="text-xl">{`${prize}`}</p>
+              <Lords className="size-6 lg:size-8" fill={"white"} />
+              <div className="flex flex-col justify-center items-center lg:gap-1">
+                <p className="text-2xs lg:text-xs">Lords Pool</p>
+                <p className="text-xs lg:text-xl">{`${prize}`}</p>
               </div>
-              <Lords fill={"white"} />
+              <Lords className="size-6 lg:size-8" fill={"white"} />
             </div>
           </TooltipTrigger>
           <TooltipContent className={disabled ? "hidden" : ""}>
@@ -95,7 +95,7 @@ export const Sponsor = ({
           <DialogDescription className="flex gap-2">
             Amount
             <span className="flex space-x-2">
-              [<Lords height={4} width={4} fill={""} />]
+              [<Lords className="size-1" fill={""} />]
             </span>
           </DialogDescription>
         </DialogHeader>
