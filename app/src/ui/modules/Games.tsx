@@ -61,7 +61,7 @@ export const Games = ({ games }: { games: GamesList }) => {
       <TableHeader>
         <TableRow className="text-2xs lg:text-xs">
           {tableHeaders[gameMode.value].map((header, index) => (
-            <TableHead className={cn("text-center uppercase h-6 lg:h-10 pt-8 pb-2", index === 0 && " text-start")} key={index}>
+            <TableHead className={cn("text-center uppercase h-6 lg:h-10 pt-2 pb-2", index === 0 && " text-start")} key={index}>
               {header}
             </TableHead>
           ))}
@@ -100,9 +100,9 @@ const DuelLobbyRow = ({ game }: { game: ComponentValue<Schema, Game> }) => {
   const lengthDate = new Date(Date.now() + Number(game.duration) * 1000);
 
   return (
-    <TableRow className="text-2xs sm:text-sm text-center">
+    <TableRow className="text-2xs lg:text-sm text-center">
       <TableCell> {/* Name */}
-        <p className="text-start">{game.name}</p>
+        <p className="text-start text-2xs">{game.name}</p>
       </TableCell>
       <TableCell> {/* Game Length */}
         <p className="text-center">{`${formatTimeUntil(lengthDate)}` || "N/A"}</p>
