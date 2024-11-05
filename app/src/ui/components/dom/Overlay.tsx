@@ -1,8 +1,9 @@
 import { useGameStore } from "@/store";
 import { Connection } from "../Connection";
 import banner from "/assets/banner.svg";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
+import { cn } from "@/ui/utils";
 
 type OverlayProps = { children: ReactNode };
 
@@ -30,25 +31,28 @@ const Banner = () => (
 
 const Content = ({ children }: { children: ReactNode }) => {
   const { isConnected } = useAccount();
+  const [orientation, setOrientation] = useState(window.screen.orientation.type);
+
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      setOrientation(window.screen.orientation.type);
+    };
+
+    window.addEventListener('orientationchange', handleOrientationChange);
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, []);
 
   return (
-    isConnected && (
-      <div
-        className="
-      w-full
-      h-full
-      grid
-      absolute
-      p-4
-      select-none
-      grid-cols-4
-      grid-rows-8
-      sm:pr-safe-right
-      sm:pl-safe-left
-      sm:grid-cols-3
-      sm:grid-rows-4
-      md:p-4
-      "
+    !isConnected && (
+      <div className={cn("w-full h-full grid absolute py-4 select-none grid-cols-4 grid-rows-8 sm:grid-cols-3 sm:grid-rows-4",
+        orientation === "landscape-primary"
+          ? "pl-safe-left pr-8"
+          : orientation === "landscape-secondary"
+            ? "pr-safe-right pl-8"
+            : "px-4"
+      )}
       >
         {children}
       </div>
