@@ -7,7 +7,25 @@
     ],
     "headers": [
         {
-            "source": "/(.*).(html|js|css)",
+            "source": "/(.*).(js|css|json|xml|ico|png|jpg|jpeg|svg|webp|mpmp4|wav|m4a)",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=31536000, immutable"
+                }
+            ]
+        },
+        {
+            "source": "/(.*).js",
+            "headers": [
+                {
+                    "key": "Content-Type",
+                    "value": "application/javascript; charset=utf-8"
+                }
+            ]
+        },
+        {
+            "source": "/",
             "headers": [
                 {
                     "key": "Cache-Control",
