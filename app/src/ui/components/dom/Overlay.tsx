@@ -45,7 +45,7 @@ const Content = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    !isConnected && (
+    isConnected && (
       <div className={cn("w-full h-full grid absolute py-4 select-none grid-cols-4 grid-rows-8 sm:grid-cols-3 sm:grid-rows-4",
         orientation === "landscape-primary"
           ? "pl-safe-left pr-8"
